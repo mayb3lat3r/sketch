@@ -8,7 +8,7 @@ export const DRAWER_TOKEN = createToken('drawer');
   providers: [
     provide({
       provide: DRAWER_TOKEN,
-      useValue: Drawer, // TODO переписать на useFactory
+      useValue: Drawer,
     }),
   ],
 })

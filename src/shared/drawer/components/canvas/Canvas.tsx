@@ -4,8 +4,6 @@ import React, { useEffect, useRef } from 'react';
 import { setToolAction } from '../../../../store/tool/actions/setTool';
 import { setCanvasAction } from '../../../../store/canvas/actions/setCanvas';
 import s from './canvas.module.css';
-// import Brush from '../toolbar/tools/brush/Brush';
-// import { ToolStore } from '../../../../store/tool/toolStore';
 
 type CanvasProps = {
   width: number;
@@ -14,7 +12,6 @@ type CanvasProps = {
 
 const Canvas = ({ width, height }: CanvasProps) => {
   const canvasRef = useRef() as MutableRefObject<HTMLCanvasElement>;
-  // const tool = useSelector(ToolStore, (state) => state.tool);
   const [setCanvas] = useActions([setCanvasAction, setToolAction]);
 
   useEffect(() => {
