@@ -1,0 +1,44 @@
+{
+  "$schema": "./node_modules/@tramvai/cli/schema.json",
+  "projects": {
+    "sketch": {
+      "name": "sketch",
+      "root": "src",
+      "type": "application",
+      "commands": {
+        "build": {
+          "options": {
+            "server": "src/index.ts",
+            "vendor": "src/vendor.ts"
+          },
+          "configurations": {
+            "sourceMap": true,
+            "modern": true,
+            "granularChunks": true,
+            "fileSystemPages": {
+              "enable": true
+            },
+            "postcss": {
+              "config": "src/postcss"
+            },
+            "alias": {
+              "~shared": "./src/shared",
+              "~entities": "./src/entities",
+              "~features": "./src/features",
+              "~widgets": "./src/widgets",
+              "~pages": "./src/pages",
+              "~processes": "./src/processes",
+              "~app": "./src/app"
+            }
+          }
+        },
+        "serve": {
+          "configurations": {
+            "hotRefresh": true,
+            "modern": true
+          }
+        }
+      }
+    }
+  }
+}

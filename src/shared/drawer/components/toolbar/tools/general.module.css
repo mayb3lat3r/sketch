@@ -1,0 +1,23 @@
+.tool {
+  margin: 5px;
+  padding: 5px;
+  background: none;
+  height: inherit;
+  width: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  transition: ease 0.1s;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.tool:hover {
+  background: rgba(20, 150, 255, 0.8);
+}
+
+.tool img {
+  width: 100%;
+}
