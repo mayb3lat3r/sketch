@@ -2,8 +2,8 @@ import React from 'react';
 import { useActions, useSelector } from '@tramvai/state';
 import icon from './img/cursor.png';
 import s from '../general.module.css';
-import { setToolAction } from '../../../../../../store/tool/actions/setTool';
-import { ToolStore } from '../../../../../../store/tool/toolStore';
+import { setToolAction } from '../../../../store/tool/actions/setTool';
+import { ToolStore } from '../../../../store/tool/toolStore';
 
 const Cursor = () => {
   const setCursorAction = useActions(setToolAction);

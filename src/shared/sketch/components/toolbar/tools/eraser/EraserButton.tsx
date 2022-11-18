@@ -1,11 +1,11 @@
 import React from 'react';
 import { useSelector } from '@tramvai/state';
-import { CanvasStore } from '../../../../../../store/canvas/canvasStore';
+import { CanvasStore } from '../../../../store/canvas/canvasStore';
 import icon from './img/eraser.png';
 
 import s from '../general.module.css';
 
-const Eraser = () => {
+const EraserButton = () => {
   const canvas = useSelector(CanvasStore, (state) => state.canvas.canvas);
   const context = canvas?.getContext('2d');
 
@@ -22,4 +22,4 @@ const Eraser = () => {
   );
 };
 
-export default Eraser;
+export default EraserButton;
