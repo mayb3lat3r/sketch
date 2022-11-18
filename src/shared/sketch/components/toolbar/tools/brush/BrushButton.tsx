@@ -11,7 +11,9 @@ const BrushButton = () => {
   const canvas = useSelector(CanvasStore, (state) => state.canvas.canvas);
 
   const setBrush = () => {
-    setBrushAction(new BrushTool(canvas!));
+    if (canvas) {
+      setBrushAction(new BrushTool(canvas));
+    }
   };
 
   return (
