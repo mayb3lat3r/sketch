@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSelector } from '@tramvai/state';
-import { CanvasStore } from '../../../../store/canvas/canvasStore';
+import { SketchStore } from '~/shared/sketch/store/store';
 import icon from './img/eraser.png';
 
 import s from '../general.module.css';
 
 const EraserButton = () => {
-  const canvas = useSelector(CanvasStore, (state) => state.canvas.canvas);
+  const canvas = useSelector(SketchStore, (state) => state.sketchStore.canvas);
   const context = canvas?.getContext('2d');
 
   const clearAll = () => {

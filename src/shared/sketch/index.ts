@@ -1,8 +1,7 @@
 import { ClientHintsModule } from '@tramvai/module-client-hints';
 import { Module } from '@tramvai/core';
 import { COMBINE_REDUCERS } from '@tramvai/tokens-common';
-import { CanvasStore } from '~/shared/sketch/store/canvas/canvasStore';
-import { ToolStore } from '~/shared/sketch/store/tool/toolStore';
+import { SketchStore } from './store/store';
 
 export * from './components/Sketch';
 
@@ -15,8 +14,8 @@ export * from './components/Sketch';
   providers: [
     {
       provide: COMBINE_REDUCERS,
-      multi: true,
-      useValue: [CanvasStore, ToolStore],
+      multi: false,
+      useValue: [SketchStore],
     },
   ],
 })

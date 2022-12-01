@@ -1,7 +1,7 @@
 import { useActions } from '@tramvai/state';
 import type { MutableRefObject } from 'react';
 import React, { useEffect, useRef } from 'react';
-import { setCanvasAction } from '../../store/canvas/actions/setCanvas';
+import { setCanvasAction } from '../../store/actions';
 import s from './canvas.module.css';
 
 type CanvasProps = {

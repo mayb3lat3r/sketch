@@ -1,14 +1,14 @@
 import React from 'react';
 import { useActions, useSelector } from '@tramvai/state';
-import { setToolAction } from '../../../../store/tool/actions/setTool';
-import { CanvasStore } from '../../../../store/canvas/canvasStore';
+import { setToolAction } from '../../../../store/actions';
+import { SketchStore } from '../../../../store/store';
 import icon from './img/paint-brush.png';
 import s from '../general.module.css';
 import BrushTool from './Brush';
 
 const BrushButton = () => {
   const setBrushAction = useActions(setToolAction);
-  const canvas = useSelector(CanvasStore, (state) => state.canvas.canvas);
+  const canvas = useSelector(SketchStore, (state) => state.sketchStore.canvas);
 
   const setBrush = () => {
     if (canvas) {
