@@ -8,7 +8,10 @@ import BrushTool from './Brush';
 
 const BrushButton = () => {
   const setBrushAction = useActions(setToolAction);
-  const canvas = useSelector(SketchStore, (state) => state.sketchStore.canvas);
+  const canvas = useSelector(
+    SketchStore,
+    (state) => state.sketchStore.canvasStore.canvas
+  );
 
   const setBrush = () => {
     if (canvas) {

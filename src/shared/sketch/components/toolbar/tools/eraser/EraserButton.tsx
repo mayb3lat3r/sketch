@@ -6,7 +6,10 @@ import icon from './img/eraser.png';
 import s from '../general.module.css';
 
 const EraserButton = () => {
-  const canvas = useSelector(SketchStore, (state) => state.sketchStore.canvas);
+  const canvas = useSelector(
+    SketchStore,
+    (state) => state.sketchStore.canvasStore.canvas
+  );
   const context = canvas?.getContext('2d');
 
   const clearAll = () => {

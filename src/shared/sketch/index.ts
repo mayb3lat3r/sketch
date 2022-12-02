@@ -5,9 +5,10 @@ import { SketchStore } from './store/store';
 
 export * from './components/Sketch';
 
-// TODO: объединить сторы в один
 // TODO: сохранение в сессию (при перезагрузке остается) travelaviabook -> saveToSessionStorage()
 // TODO: подумать над конфигурацией модуля
+
+// ?: Раз это модуль, возможно, следует создать для него package.json
 
 @Module({
   imports: [ClientHintsModule],
