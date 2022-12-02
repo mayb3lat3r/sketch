@@ -19,9 +19,9 @@ const Canvas = ({ width, height }: CanvasProps) => {
     setCanvas(canvasRef.current); // TODO: фикс дабл рендера
 
     const dataUrl = localStorage.getItem('dataUrl');
-    if (dataUrl && canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d')!;
+    const ctx = canvasRef.current.getContext('2d');
 
+    if (dataUrl && ctx) {
       const img = new Image();
 
       img.src = dataUrl;

@@ -15,7 +15,7 @@ export default class Brush extends Tool {
   }
 
   // TODO: типизировать все any
-  mouseUpHandler(e: any) {
+  mouseUpHandler(_e: any) {
     this.isMouseDown = false;
   }
 
