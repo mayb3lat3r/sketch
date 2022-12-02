@@ -24,7 +24,7 @@ export const pushToUndoAction = declareAction({
 export const popToUndoAction = declareAction({
   name: 'popToUndo',
   async fn() {
-    this.dispatch(popToUndo(''));
+    this.dispatch(popToUndo());
   },
 });
 
