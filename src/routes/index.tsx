@@ -3,8 +3,8 @@ import { Sketch } from '~/shared/sketch';
 import s from './index.module.css';
 
 const sketchProps = {
-  widthProp: 600,
-  heightProp: 600,
+  // widthProp: 600,
+  // heightProp: 600,
 };
 
 export const IndexPage = () => {

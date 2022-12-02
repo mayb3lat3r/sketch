@@ -10,11 +10,14 @@ const EraserButton = () => {
     SketchStore,
     (state) => state.sketchStore.canvasStore.canvas
   );
-  const context = canvas?.getContext('2d');
+  const ctx = canvas?.getContext('2d');
 
   const clearAll = () => {
-    if (context && canvas) {
-      context.clearRect(0, 0, canvas.width, canvas.height);
+    if (ctx && canvas) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const data = canvas.toDataURL();
+      localStorage.setItem('dataUrl', data);
     }
   };
 

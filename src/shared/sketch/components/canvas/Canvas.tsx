@@ -1,8 +1,7 @@
-import { useActions, useSelector } from '@tramvai/state';
+import { useActions } from '@tramvai/state';
 import type { MutableRefObject } from 'react';
 import React, { useEffect, useRef } from 'react';
 import { pushToUndoAction, setCanvasAction } from '../../store/actions';
-import { SketchStore } from '../../store/store';
 import s from './canvas.module.css';
 
 type CanvasProps = {
@@ -38,22 +37,14 @@ const Canvas = ({ width, height }: CanvasProps) => {
     }
   }, [setCanvas]);
 
-  const undoList = useSelector(
-    SketchStore,
-    (state) => state.sketchStore.canvasStore.undoList
-  );
-
-  useEffect(() => {
-    const { length } = undoList;
-
-    if (length) {
-      const dataUrl = undoList[length - 1];
-      localStorage.setItem('dataUrl', dataUrl);
-    }
-  }, [undoList]);
-
   const mouseDownHandler = () => {
-    setPushToUndo(canvasRef.current.toDataURL());
+    const data = canvasRef.current.toDataURL();
+    setPushToUndo(data);
+  };
+
+  const mouseUpHandler = () => {
+    const data = canvasRef.current.toDataURL();
+    localStorage.setItem('dataUrl', data);
   };
 
   return (
@@ -63,6 +54,7 @@ const Canvas = ({ width, height }: CanvasProps) => {
       height={height}
       ref={canvasRef}
       onMouseDown={() => mouseDownHandler()}
+      onMouseUp={() => mouseUpHandler()}
     />
   );
 };
