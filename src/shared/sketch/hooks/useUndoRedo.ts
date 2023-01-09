@@ -1,36 +1,38 @@
 import { useSelector, useActions } from '@tramvai/state';
-import { popToUndoAction, pushToRedoAction } from '../store/actions';
+import { setIsLastBrowseAction } from '../store/actions';
+import { setCurrentIndexFrameAction } from '../store/actions';
 import { SketchStore } from '../store/store';
 
 export const useUndoRedo = () => {
   const canvas = useSelector(
     SketchStore,
-    (state) => state.sketchStore.canvasStore.canvas
+    ({ sketchStore }) => sketchStore.canvasStore.canvas
   );
 
-  const undoList = useSelector(
+  const currentIndexFrame = useSelector(
     SketchStore,
-    (state) => state.sketchStore.canvasStore.undoList
+    ({ sketchStore }) => sketchStore.canvasStore.browser.currentIndexFrame
   );
 
-  const redoList = useSelector(
+  const history = useSelector(
     SketchStore,
-    (state) => state.sketchStore.canvasStore.redoList
+    ({ sketchStore }) => sketchStore.canvasStore.browser.history
   );
 
-  const popToUndo = useActions(popToUndoAction);
-
-  const pushToRedo = useActions(pushToRedoAction);
+  const setCurrentIndexFrame = useActions(setCurrentIndexFrameAction);
+  const setIsLastBrowse = useActions(setIsLastBrowseAction);
 
   if (!canvas) return [];
   const ctx = canvas.getContext('2d');
 
-  const undo = () => {
-    if (undoList.length) {
-      const dataUrl = undoList[undoList.length - 1];
+  const undo = async () => {
+    if (currentIndexFrame > 0) {
+      await setIsLastBrowse(true);
+      const undoIndex = currentIndexFrame - 1;
 
-      popToUndo();
-      pushToRedo(dataUrl);
+      const dataUrl = history[undoIndex];
+
+      await setCurrentIndexFrame(undoIndex);
 
       const img = new Image();
 
@@ -45,9 +47,17 @@ export const useUndoRedo = () => {
     }
   };
 
-  const redo = () => {
-    if (redoList.length) {
-      const dataUrl = redoList[redoList.length - 1];
+  const redo = async () => {
+    if (history.length > 0) {
+      await setIsLastBrowse(true);
+
+      const redoIndex = currentIndexFrame + 1;
+
+      const dataUrl = history[redoIndex] ? history[redoIndex] : null;
+
+      if (!dataUrl) return;
+
+      await setCurrentIndexFrame(redoIndex);
 
       const img = new Image();
 

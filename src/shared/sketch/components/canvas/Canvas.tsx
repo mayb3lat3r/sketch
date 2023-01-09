@@ -1,7 +1,14 @@
-import { useActions } from '@tramvai/state';
+import { useActions, useSelector } from '@tramvai/state';
 import type { MutableRefObject } from 'react';
 import React, { useEffect, useRef } from 'react';
-import { pushToUndoAction, setCanvasAction } from '../../store/actions';
+import {
+  setCanvasAction,
+  pushToHistoryAction,
+  incrementCurrentIndexFrameAction,
+  sliceStoryAction,
+  setIsLastBrowseAction,
+} from '../../store/actions';
+import { SketchStore } from '../../store/store';
 import s from './canvas.module.css';
 
 type CanvasProps = {
@@ -12,7 +19,16 @@ type CanvasProps = {
 const Canvas = ({ width, height }: CanvasProps) => {
   const canvasRef = useRef() as MutableRefObject<HTMLCanvasElement>;
   const setCanvas = useActions(setCanvasAction);
-  const setPushToUndo = useActions(pushToUndoAction);
+  const pushToHistory = useActions(pushToHistoryAction);
+  const incrementCurrentIndexFrame = useActions(
+    incrementCurrentIndexFrameAction
+  );
+  const sliceStory = useActions(sliceStoryAction);
+  const isLastRedo = useSelector(
+    SketchStore,
+    ({ sketchStore }) => sketchStore.canvasStore.browser.isLastBrowse
+  );
+  const setIsLastRedo = useActions(setIsLastBrowseAction);
 
   useEffect(() => {
     setCanvas(canvasRef.current); // TODO: фикс дабл рендера
@@ -37,14 +53,16 @@ const Canvas = ({ width, height }: CanvasProps) => {
     }
   }, [setCanvas]);
 
-  const mouseDownHandler = () => {
-    const data = canvasRef.current.toDataURL();
-    setPushToUndo(data);
-  };
-
   const mouseUpHandler = () => {
-    const data = canvasRef.current.toDataURL();
-    localStorage.setItem('dataUrl', data);
+    if (isLastRedo) {
+      sliceStory();
+      setIsLastRedo(false);
+    }
+
+    const dataUrl = canvasRef.current.toDataURL();
+    localStorage.setItem('dataUrl', dataUrl);
+    pushToHistory(dataUrl);
+    incrementCurrentIndexFrame();
   };
 
   return (
@@ -53,7 +71,6 @@ const Canvas = ({ width, height }: CanvasProps) => {
       width={width}
       height={height}
       ref={canvasRef}
-      onMouseDown={() => mouseDownHandler()}
       onMouseUp={() => mouseUpHandler()}
     />
   );
