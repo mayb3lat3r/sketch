@@ -1,17 +1,23 @@
 import { createReducer } from '@tramvai/state';
 import {
-  popToUndo,
-  pushToRedo,
-  pushToUndo,
   setCanvas,
   setTool,
+  pushToHistory,
+  incrementCurrentIndexFrame,
+  decrementCurrentIndexFrame,
+  setCurrentIndexFrame,
+  sliceStory,
+  setIsLastBrowse,
 } from './events';
 
 const initialState = {
   canvasStore: {
     canvas: null,
-    undoList: [],
-    redoList: [],
+    browser: {
+      history: [],
+      currentIndexFrame: -1,
+      isLastBrowse: false,
+    },
   },
   tool: null,
 };
@@ -19,8 +25,11 @@ const initialState = {
 export type SketchStoreState = {
   canvasStore: {
     canvas: HTMLCanvasElement | null;
-    undoList: any[];
-    redoList: any[];
+    browser: {
+      history: string[];
+      currentIndexFrame: number;
+      isLastBrowse: boolean;
+    };
   };
   tool: any;
 };
@@ -32,44 +41,85 @@ export const SketchStore = createReducer<SketchStoreState>(
   .on(setCanvas, (state, canvas) => {
     return { ...state, canvasStore: { ...state.canvasStore, canvas } };
   })
-  .on(pushToUndo, (state, data) => {
-    return {
-      ...state,
-      canvasStore: {
-        ...state.canvasStore,
-        undoList: [...state.canvasStore.undoList, data],
-      },
-    };
-  })
-  .on(popToUndo, (state) => {
-    const { undoList } = state.canvasStore;
 
-    if (undoList.length === 0) {
-      return { ...state };
-    }
-
-    const updatedUndoList = state.canvasStore.undoList.splice(
-      0,
-      undoList.length - 1
-    );
-
-    return {
-      ...state,
-      canvasStore: {
-        ...state.canvasStore,
-        undoList: updatedUndoList,
-      },
-    };
-  })
-  .on(pushToRedo, (state, data) => {
-    return {
-      ...state,
-      canvasStore: {
-        ...state.canvasStore,
-        redoList: [...state.canvasStore.redoList, data],
-      },
-    };
-  })
   .on(setTool, (state, tool) => {
     return { ...state, tool };
+  })
+
+  .on(pushToHistory, (state, dataUrl) => {
+    return {
+      ...state,
+      canvasStore: {
+        ...state.canvasStore,
+        browser: {
+          ...state.canvasStore.browser,
+          history: [...state.canvasStore.browser.history, dataUrl],
+        },
+      },
+    };
+  })
+  .on(incrementCurrentIndexFrame, (state) => {
+    return {
+      ...state,
+      canvasStore: {
+        ...state.canvasStore,
+        browser: {
+          ...state.canvasStore.browser,
+          currentIndexFrame: state.canvasStore.browser.currentIndexFrame + 1,
+        },
+      },
+    };
+  })
+  .on(decrementCurrentIndexFrame, (state) => {
+    return {
+      ...state,
+      canvasStore: {
+        ...state.canvasStore,
+        browser: {
+          ...state.canvasStore.browser,
+          currentIndexFrame: state.canvasStore.browser.currentIndexFrame - 1,
+        },
+      },
+    };
+  })
+  .on(setCurrentIndexFrame, (state, index) => {
+    return {
+      ...state,
+      canvasStore: {
+        ...state.canvasStore,
+        browser: {
+          ...state.canvasStore.browser,
+          currentIndexFrame: index,
+        },
+      },
+    };
+  })
+  .on(sliceStory, (state) => {
+    const { browser } = state.canvasStore;
+
+    const currentIndex = browser.currentIndexFrame;
+    const newHistory = browser.history.slice(0, currentIndex + 1);
+
+    return {
+      ...state,
+      canvasStore: {
+        ...state.canvasStore,
+        browser: {
+          ...state.canvasStore.browser,
+          history: newHistory,
+        },
+      },
+    };
+  })
+  .on(setIsLastBrowse, (state, isLastBrowse) => {
+    return {
+      ...state,
+      canvasStore: {
+        ...state.canvasStore,
+        browser: {
+          ...state.canvasStore.browser,
+          isLastBrowse,
+        },
+      },
+    };
   });
