@@ -4,12 +4,19 @@ import React, { useEffect, useRef } from 'react';
 import {
   setCanvasAction,
   pushToHistoryAction,
-  incrementCurrentIndexFrameAction,
   sliceStoryAction,
   setIsLastBrowseAction,
+  setHistoryAction,
+  setCurrentIndexFrameAction,
 } from '../../store/actions';
 import { SketchStore } from '../../store/store';
 import s from './canvas.module.css';
+
+const setDefaultStorage = () => {
+  localStorage.setItem('history', `[]`);
+  localStorage.setItem('currentIndexFrame', '-1');
+  localStorage.setItem('isLastBrowse', '0');
+};
 
 type CanvasProps = {
   width: number;
@@ -19,21 +26,43 @@ type CanvasProps = {
 const Canvas = ({ width, height }: CanvasProps) => {
   const canvasRef = useRef() as MutableRefObject<HTMLCanvasElement>;
   const setCanvas = useActions(setCanvasAction);
+
   const pushToHistory = useActions(pushToHistoryAction);
-  const incrementCurrentIndexFrame = useActions(
-    incrementCurrentIndexFrameAction
-  );
   const sliceStory = useActions(sliceStoryAction);
-  const isLastRedo = useSelector(
+
+  const setHistory = useActions(setHistoryAction);
+  const setCurrentINdexFrame = useActions(setCurrentIndexFrameAction);
+
+  const isLastBrowse = useSelector(
     SketchStore,
     ({ sketchStore }) => sketchStore.canvasStore.browser.isLastBrowse
   );
-  const setIsLastRedo = useActions(setIsLastBrowseAction);
+  const setIsLastBrowse = useActions(setIsLastBrowseAction);
 
   useEffect(() => {
     setCanvas(canvasRef.current); // TODO: фикс дабл рендера
+    let dataUrl;
 
-    const dataUrl = localStorage.getItem('dataUrl');
+    const historyStorage = localStorage.getItem('history');
+    const currentIndexFrameStorage = localStorage.getItem('currentIndexFrame');
+    const isLastBrowseStorage = localStorage.getItem('isLastBrowse');
+
+    if (historyStorage && typeof currentIndexFrameStorage === 'string') {
+      const historyStorageParsed = JSON.parse(historyStorage);
+      const index = Number(currentIndexFrameStorage);
+
+      setHistory(historyStorageParsed);
+      setCurrentINdexFrame(index);
+
+      dataUrl = historyStorageParsed[index];
+    } else {
+      setDefaultStorage();
+    }
+
+    if (isLastBrowseStorage) {
+      setIsLastBrowse(Boolean(isLastBrowseStorage));
+    }
+
     const ctx = canvasRef.current.getContext('2d');
 
     if (dataUrl && ctx) {
@@ -51,18 +80,23 @@ const Canvas = ({ width, height }: CanvasProps) => {
         );
       };
     }
-  }, [setCanvas]);
+  }, [setCanvas, setCurrentINdexFrame, setHistory, setIsLastBrowse]);
 
-  const mouseUpHandler = () => {
-    if (isLastRedo) {
-      sliceStory();
-      setIsLastRedo(false);
+  const mouseUpHandler = async () => {
+    if (isLastBrowse) {
+      await sliceStory();
+      await setIsLastBrowse(false);
+      localStorage.setItem('isLastBrowse', '0');
     }
 
     const dataUrl = canvasRef.current.toDataURL();
-    localStorage.setItem('dataUrl', dataUrl);
-    pushToHistory(dataUrl);
-    incrementCurrentIndexFrame();
+
+    await pushToHistory(dataUrl);
+    const historyStorage = localStorage.getItem('history')!;
+
+    if (Array.from(JSON.parse(historyStorage)).length === 0) {
+      localStorage.setItem('history', JSON.stringify([dataUrl]));
+    }
   };
 
   return (

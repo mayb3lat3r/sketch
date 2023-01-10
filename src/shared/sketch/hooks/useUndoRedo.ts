@@ -26,11 +26,17 @@ export const useUndoRedo = () => {
   const ctx = canvas.getContext('2d');
 
   const undo = async () => {
-    if (currentIndexFrame > 0) {
+    if (currentIndexFrame >= 0) {
       await setIsLastBrowse(true);
-      const undoIndex = currentIndexFrame - 1;
+      localStorage.setItem('isLastBrowse', '1');
 
+      const undoIndex = currentIndexFrame - 1;
       const dataUrl = history[undoIndex];
+
+      if (!dataUrl) {
+        ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        localStorage.setItem('currentIndexFrame', '-1');
+      }
 
       await setCurrentIndexFrame(undoIndex);
 
@@ -41,15 +47,15 @@ export const useUndoRedo = () => {
         ctx?.clearRect(0, 0, canvas.width, canvas.height);
         ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
       };
-      localStorage.setItem('dataUrl', dataUrl);
-    } else {
-      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+
+      localStorage.setItem('currentIndexFrame', `${undoIndex}`);
     }
   };
 
   const redo = async () => {
     if (history.length > 0) {
       await setIsLastBrowse(true);
+      localStorage.setItem('isLastBrowse', '1');
 
       const redoIndex = currentIndexFrame + 1;
 
@@ -66,6 +72,8 @@ export const useUndoRedo = () => {
         ctx?.clearRect(0, 0, canvas.width, canvas.height);
         ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
       };
+
+      localStorage.setItem('currentIndexFrame', `${redoIndex}`);
     }
   };
 

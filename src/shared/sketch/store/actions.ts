@@ -10,6 +10,7 @@ import {
   setCurrentIndexFrame,
   sliceStory,
   setIsLastBrowse,
+  setHistory,
 } from './events';
 
 export const setCanvasAction = declareAction({
@@ -43,7 +44,16 @@ export const redoAction = declareAction({
 export const pushToHistoryAction = declareAction({
   name: 'pushToHistory',
   async fn(dataUrl) {
-    this.dispatch(pushToHistory(dataUrl));
+    const index = Number(localStorage.getItem('currentIndexFrame'));
+    localStorage.setItem('currentIndexFrame', `${index + 1}`);
+
+    const history = JSON.parse(localStorage.getItem('history')!);
+
+    localStorage.setItem('history', JSON.stringify([...history, dataUrl]));
+
+    await this.dispatch(pushToHistory(dataUrl));
+    await this.dispatch(incrementCurrentIndexFrame());
+    await this.dispatch(setIsLastBrowse(false));
   },
 });
 
@@ -65,6 +75,13 @@ export const setCurrentIndexFrameAction = declareAction({
   name: 'setCurrentIndexFrame',
   async fn(index) {
     this.dispatch(setCurrentIndexFrame(index));
+  },
+});
+
+export const setHistoryAction = declareAction({
+  name: 'setHistory',
+  async fn(history) {
+    this.dispatch(setHistory(history));
   },
 });
 

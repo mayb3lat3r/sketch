@@ -1,6 +1,7 @@
 import React from 'react';
-import { useSelector } from '@tramvai/state';
+import { useActions, useSelector } from '@tramvai/state';
 import { SketchStore } from '~/shared/sketch/store/store';
+import { pushToHistoryAction } from '~/shared/sketch/store/actions';
 import icon from './img/eraser.png';
 
 import s from '../general.module.css';
@@ -10,14 +11,24 @@ const EraserButton = () => {
     SketchStore,
     (state) => state.sketchStore.canvasStore.canvas
   );
+  const pushToHistory = useActions(pushToHistoryAction);
+
   const ctx = canvas?.getContext('2d');
 
   const clearAll = () => {
     if (ctx && canvas) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL();
 
-      const data = canvas.toDataURL();
-      localStorage.setItem('dataUrl', data);
+      const img = new Image();
+
+      img.src = dataUrl;
+      img.onload = () => {
+        ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+
+      pushToHistory(dataUrl);
     }
   };
 

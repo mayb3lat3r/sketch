@@ -21,6 +21,8 @@ export const setCurrentIndexFrame = createEvent<number>(
   'SET_CURRENT_INDEX_FRAME'
 );
 
+export const setHistory = createEvent<string[]>('SET_HISTORY');
+
 export const sliceStory = createEvent<void>('SLICE_STORY');
 
 export const setIsLastBrowse = createEvent<boolean>('SET_IS_LAST_BROWSE');
