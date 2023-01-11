@@ -8,6 +8,7 @@ import {
   setCurrentIndexFrame,
   sliceStory,
   setIsLastBrowse,
+  setHistory,
 } from './events';
 
 const initialState = {
@@ -90,6 +91,18 @@ export const SketchStore = createReducer<SketchStoreState>(
         browser: {
           ...state.canvasStore.browser,
           currentIndexFrame: index,
+        },
+      },
+    };
+  })
+  .on(setHistory, (state, history) => {
+    return {
+      ...state,
+      canvasStore: {
+        ...state.canvasStore,
+        browser: {
+          ...state.canvasStore.browser,
+          history,
         },
       },
     };
