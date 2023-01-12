@@ -9,6 +9,9 @@ import {
   sliceStory,
   setIsLastBrowse,
   setHistory,
+  setLineWidth,
+  setFillColor,
+  setStrokeColor,
 } from './events';
 
 const initialState = {
@@ -135,4 +138,25 @@ export const SketchStore = createReducer<SketchStoreState>(
         },
       },
     };
+  })
+  .on(setLineWidth, (state, width) => {
+    if (state.tool) {
+      // eslint-disable-next-line no-param-reassign
+      state.tool.lineWidth = width;
+    }
+    return state;
+  })
+  .on(setFillColor, (state, color) => {
+    if (state.tool) {
+      // eslint-disable-next-line no-param-reassign
+      state.tool.fillColor = color;
+    }
+    return state;
+  })
+  .on(setStrokeColor, (state, color) => {
+    if (state.tool) {
+      // eslint-disable-next-line no-param-reassign
+      state.tool.strokeColor = color;
+    }
+    return state;
   });

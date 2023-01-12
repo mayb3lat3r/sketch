@@ -11,6 +11,9 @@ import {
   sliceStory,
   setIsLastBrowse,
   setHistory,
+  setLineWidth,
+  setFillColor,
+  setStrokeColor,
 } from './events';
 
 export const setCanvasAction = declareAction({
@@ -24,6 +27,27 @@ export const setToolAction = declareAction({
   name: 'setTool',
   async fn(tool) {
     this.dispatch(setTool(tool));
+  },
+});
+
+export const setLineWidthAction = declareAction({
+  name: 'setLineWidth',
+  async fn(width) {
+    this.dispatch(setLineWidth(width));
+  },
+});
+
+export const setFillColorAction = declareAction({
+  name: 'setFillColor',
+  async fn(color) {
+    this.dispatch(setFillColor(color));
+  },
+});
+
+export const setStrokeColorAction = declareAction({
+  name: 'setStrokeColor',
+  async fn(color) {
+    this.dispatch(setStrokeColor(color));
   },
 });
 

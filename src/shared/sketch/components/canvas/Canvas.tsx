@@ -41,6 +41,7 @@ const Canvas = ({ width, height }: CanvasProps) => {
 
   useEffect(() => {
     setCanvas(canvasRef.current); // TODO: фикс дабл рендера
+
     let dataUrl;
 
     const historyStorage = localStorage.getItem('history');

@@ -26,3 +26,7 @@ export const setHistory = createEvent<string[]>('SET_HISTORY');
 export const sliceStory = createEvent<void>('SLICE_STORY');
 
 export const setIsLastBrowse = createEvent<boolean>('SET_IS_LAST_BROWSE');
+
+export const setLineWidth = createEvent<number>('SET_LINE_WIDTH');
+export const setFillColor = createEvent<string>('SET_FILL_COLOR');
+export const setStrokeColor = createEvent<string>('SET_STROKE_COLOR');
